@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mayank Kedia's website">
+    <meta name="author" content="Mayank Kedia">
+
+    <title>Mayank Kedia</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS 
+    <link href="css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <style>
+
+    .badge {
+        font-weight: normal;
+        /*
+            The .badge class takes most of its styling 
+            from bootstrap
+        */
+        
+    }
+
+    body {
+        padding-bottom: 5em;
+    }
+
+    button {
+        margin: 1 1 1 1;
+    }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+
+    var colour = d3.scale.linear().range(["beige", "red"]);
+    var text_colour = d3.scale.linear().range(["black", "white"]);
+
+    // Variables that hold all the data we need
+    var manu_leicester_wf, manu_leicester_wl, chelsea_spurs_wf, chelsea_spurs_wl;
+    var first_half_minutes, second_half_minutes;
+
+
+    function fix_colour_domain(data, index){
+        /**
+            resets sets the color domain based on the 'index'
+            in the array at each row of the data which has to be considered.
+        */
+        first_half_frequency = data[0].map(function(x){
+            return x[index];
+        });
+        second_half_frequency = data[1].map(function(x){
+            return x[index];
+        });
+        console.log(first_half_frequency);
+        min_freq = d3.min([d3.min(first_half_frequency), d3.min(second_half_frequency)]);
+        max_freq = d3.max([d3.max(first_half_frequency), d3.max(second_half_frequency)]);
+        colour.domain([min_freq, max_freq]);
+        text_colour.domain([min_freq, max_freq]);
+    };
+
+    function add_minutes(id, x_half_data){
+        /**
+        @param id: the id of the div in which the minute 
+            badges are to be added
+            Adds badges to the element with the id selector
+
+        */
+        var badges = d3.select(id).selectAll(".badge")
+            .data(x_half_data)
+            .enter()
+                .append("a")
+                .attr("class", "badge")
+                .text(function(d){
+                    return d[d.length-1]
+                })
+                .style("width", "40px");
+        return badges;
+
+    };
+
+    function add_words(word_list, frequencies){
+
+    }
+
+    function color_minutes(selection, word, index){
+        /**
+            Colors and styles the selection
+            based on the word/index selected 
+        */
+        selection.style("background", function(d){
+            console.log(d[index]);
+            return colour(d[index]);
+            })
+            .attr("title", function(d){
+                /*
+                TODO: Add the name of the word here
+                */
+                return d[index];
+            })
+            .style("color", function(d){
+                return text_colour(d[index]);
+            });
+    };
+
+    function create_chart(error, ct_wf, ct_wl, ml_wf, ml_wl){
+        /**
+        *  
+        *  Called when the chart is initiated
+        *
+        */
+        /**
+        Assigning the input to global variables
+        */
+        manu_leicester_wf = ml_wf;
+        manu_leicester_word_list = ml_wl;
+        chelsea_tottenham_wf = ct_wf;
+        chelsea_tottenham_word_list = ct_wl;
+
+        var data = ct_wf, 
+            word_list = ct_wl;
+
+        console.log(error);
+        var word = word_list[0]['word'], 
+            index = word_list[0]['index'];
+
+        fix_colour_domain(data,index);
+
+        var first_half_data = data[0];
+        var second_half_data = data[1];
+
+        first_half_minutes = add_minutes("#first_half", first_half_data);
+        second_half_minutes = add_minutes("#second_half", second_half_data);
+
+        color_minutes(first_half_minutes, word, index);
+        color_minutes(second_half_minutes, word, index);
+
+    };
+
+
+    queue()
+        .defer(d3.json, 'chelsea_tottenham_wf.json')               
+        .defer(d3.csv, 'chelsea_tottenham_word_list.csv') // REPLACE REF WITH DATA
+        .defer(d3.json, 'manu_leicester_wf.json')               
+        .defer(d3.csv, 'manu_leicester_word_list.csv') // REPLACE REF WITH DATA
+        .await(create_chart);
+
+
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header">
+          <h1>Visualizing Tweets<small> (During the English Premier League)</small></h1>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="page-header">
+                <h4>Choose match</h4>
+            </div>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation" class="active"><a href="#">Manchester vs Leicester</a></li>
+              <li role="presentation"><a href="#">Chelsea vs Tottenham</a></li>
+            </ul>
+            <div class="page-header">
+              <h4>Choose words</h4>
+            </div>
+            <div class="btn-group" role="group" aria-label="choose words">
+              <button type="button" class="btn btn-default">Leicester</button>
+              <button type="button" class="btn btn-default">Middle</button>
+              <button type="button" class="btn btn-default">DrinkWater</button>
+              <button type="button" class="btn btn-default">Vardy</button>
+              <button type="button" class="btn btn-default">Mahrez/Mahrej</button>
+              <button type="button" class="btn btn-default">Goal</button>
+              <button type="button" class="btn btn-default">Penalty</button>
+              <button type="button" class="btn btn-default">Referee</button>
+              <button type="button" class="btn btn-default">Champions</button>
+              <button type="button" class="btn btn-default">Right</button>
+              <button type="button" class="btn btn-default">Right</button>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="page-header">
+              <h4>Manchester United vs Leicester</h4>
+            </div>
+            <div id="first_half">
+            </div>
+
+            <div class="page-header">
+              <h4></h4>
+            </div>
+            <div id="second_half">
+            </div>
+        </div>
+          
+    </div>
+
+
+
+    <!-- jQuery Version 1.12.3 -->
+    <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>
