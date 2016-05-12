@@ -72,9 +72,17 @@
     var manu_leicester_wf, manu_leicester_wl, chelsea_tottenham_wf, chelsea_tottenham_wl;
     var first_half_minutes, second_half_minutes;
     var data, word_list;
-    var svg;
+    var first_half_frequency, second_half_frequency;
+    var min_freq, max_freq;
 
-    var x = d3.scale.liner(),
+    var match_heading = {"ml":"Manchester United vs Leicester City", "ct":"Chelsea vs Tottenham Hotspur"};
+    // For Histogram !
+    // Reference https://bl.ocks.org/mbostock/3048450 
+    var svg;
+    var formatCount = d3.format(",d");
+    var svg_height, svg_width;
+    var margin = {top: 20, right: 30, bottom: 30, left: 30};
+    var x = d3.scale.linear(),
         y = d3.scale.linear(), 
         xAxis = d3.svg.axis()
                     .scale(x)
@@ -84,7 +92,7 @@
                     .orient("left");
 
 
-    function fix_colour_domain(m_data, index){
+    function set_colour_domain(m_data, index){
         /**
             resets sets the color domain based on the 'index'
             in the array at each row of the data which has to be considered.
@@ -129,22 +137,64 @@
         var bounding_rect = document.getElementById('svg')
                                     .getBoundingClientRect();
 
-        var margin = {top: 10, right: 30, bottom: 30, left: 30},
-        var width = bounding_rect['width'] - margin.left - margin.right;
-        var height = 200;
+        svg_width = bounding_rect['width'] - margin.left - margin.right;
+        svg_height = 200;
         svg = d3.select("#svg").append('svg')
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
+                .attr("width", svg_width + margin.left + margin.right)
+                .attr("height", svg_height + margin.top + margin.bottom)
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        x.range([0, width]);
-        y.range([height, 0]); 
+        x.range([0, svg_width]);
+        y.range([svg_height, 0]); 
 
     }
 
     function update_histogram(word, index){
-        
+        /*
+            Make sure this is called after
+            set_color_domain when the first_half_frequencies etc are set
+        */
+        svg.selectAll(".bar").remove();
+        svg.selectAll(".axis").remove();
+        var frequencies = first_half_frequency.concat(second_half_frequency);
+
+        var bins = 20;
+        if(max_freq < 20){
+            bins = max_freq;
+        }
+        hist_data = d3.layout.histogram()
+                        .bins(bins)(frequencies);
+        // domain of y is based on the counts of the frequencies
+        x.domain([0, d3.max(frequencies)]);
+        y.domain([0, d3.max(hist_data, function(d){ return d.y; })]);
+        var bar = svg.selectAll(".bar")
+                    .data(hist_data)
+                  .enter().append("g")
+                    .attr("class", "bar")
+                    .attr("transform", function(d) { 
+                        return "translate(" + x(d.x) + "," + y(d.y) + ")"; 
+                    });
+
+        console.log(hist_data);
+        bar.append("rect")
+            .attr("x", 1)
+            .attr("width", x(hist_data[0].dx) - 1)
+            .attr("height", function(d) { return svg_height - y(d.y); });
+
+        bar.append("text")
+            .attr("dy", ".75em")
+            .attr("y", 6)
+            .attr("x", x(hist_data[0].dx) / 2)
+            .attr("text-anchor", "middle")
+            .text(function(d) { return formatCount(d.y); });
+
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + svg_height + ")")
+            .call(xAxis);
+
     }
 
 
@@ -168,9 +218,12 @@
     }
 
     function on_word_click(word, index){
-        fix_colour_domain(data, index);
+        set_colour_domain(data, index);
         color_minutes(first_half_minutes, word, index);
         color_minutes(second_half_minutes, word, index);
+
+        update_histogram(word, index);
+
     }
 
     function color_minutes(selection, word, index){
@@ -192,20 +245,18 @@
             });
     };
 
-    function set_match(wf, wl){
+    function set_match(wf, wl, match){
         data = wf;
         word_list = wl;
-        console.log(word_list.length);
         var word = word_list[4]['word'], 
             index = word_list[4]['index'];
 
         var first_half_data = data[0];
         var second_half_data = data[1];
         add_words(word_list);
-        console.log(first_half_data.length);
+        d3.select("#match_heading").text(match_heading[match]);
         first_half_minutes = add_minutes("#first_half", first_half_data);
         second_half_minutes = add_minutes("#second_half", second_half_data);
-
         on_word_click(word, index);
 
     }
@@ -226,7 +277,8 @@
         console.log(ml_wl);
         console.log(ct_wl);
 
-        set_match(ct_wf, ct_wl);
+        add_svg();
+        set_match(ct_wf, ct_wl, 'ct');
 
     };
 
@@ -284,8 +336,8 @@
                 <h4>Choose match</h4>
             </div>
             <ul class="nav nav-pills nav-stacked">
-              <li role="presentation" class="match" ><a href="#" id="ml_nav" onclick="set_match(manu_leicester_wf, manu_leicester_wl)">Manchester vs Leicester</a></li>
-              <li role="presentation" class="match" ><a href="#" id="ct_nav" onclick="set_match(chelsea_tottenham_wf, chelsea_tottenham_wl)">Chelsea vs Tottenham</a></li>
+              <li role="presentation" class="match" ><a href="#" id="ml_nav" onclick="set_match(manu_leicester_wf, manu_leicester_wl, 'ml')">Manchester vs Leicester</a></li>
+              <li role="presentation" class="match" ><a href="#" id="ct_nav" onclick="set_match(chelsea_tottenham_wf, chelsea_tottenham_wl, 'ct')">Chelsea vs Tottenham</a></li>
             </ul>
             <div class="page-header">
               <h4>Choose words</h4>
@@ -308,7 +360,7 @@
         </div>
         <div class="col-sm-8">
             <div class="page-header">
-              <h4>Manchester United vs Leicester</h4>
+              <h4 id="match_heading"></h4>
             </div>
             <div id="first_half">
             </div>
