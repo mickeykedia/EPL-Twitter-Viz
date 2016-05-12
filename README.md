@@ -48,9 +48,13 @@ The detailed source code and instructions on how to setup your own pipeline to c
 
 #### EDA Plots 
 
-##### What language do EPL supporters tweet in ?
+##### What language do EPL supporters tweet in (from a sample of the data)?
 ![](EDA/eda_1.png)
 
+##### What Country do EPL supporters tweet from (from a sample of the data)?
+![](EDA/country_wise_plot.png)
 
 ##### Number of tweets being collected per minute ?
 ![](EDA/num_tweets_per_minute.png )
+
+
