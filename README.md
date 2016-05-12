@@ -2,14 +2,18 @@
 
 This is a visualization representing twitter reactions over minutes of play during two important matches in the English Premier League which ended up deciding the champion for this year (Leicester City). 
 
+The github repo for the streaming pipeline is [here]((https://github.com/mickeykedia/EPL-Twitter) 
+
 These matches were Manchester United vs Leicester City (May 1, 2016) and Chelsea vs Tottenham Hotspurs (May 2, 2016).
 
 #### Timeline and short background
 - May 1: Manchester United draw vs Leicester city (1-1) 
 - May 2: Chelsea draw vs Tottenham (2-2) 
 
-Background: Before the first match Leicester city had to win the match to win the league (first time in 132 years of club history, starting from 1-5000 odds at the beginning of the year). Manchester United has traditionally been the most dominating club of the EPL and to win the league at their homeground would have been epic for Leicester City. 
-They ended up not winnning, but drawing (1 point), which put the focus on Tottenham's next match. Tottenham would have to now win all of its 3 matches to have a chance of winning the league, but they were playing at the homeground of defending champions Chelsea who are also traditionally bitter rivals. Before the game there was a lot of talk from Chelsea players who made it clear that they were supporting Leicester city and would do everything possible to deny Tottenham a win. 
+**Background**: Before the first match Leicester city had to win the match to win the league (first time in 132 years of club history, starting from 1-5000 odds at the beginning of the year). Manchester United has traditionally been the most dominating club of the EPL and to win the league at their homeground would have been epic for Leicester City. 
+They ended up not winnning, but drawing (1 point), which put the focus on Tottenham's next match. 
+
+Tottenham would have to now win all of its 3 matches to have a chance of winning the league, but they were playing at the homeground of defending champions Chelsea who are also traditionally bitter rivals. Before the game there was a lot of talk from Chelsea players who made it clear that they were supporting Leicester city and would do everything possible to deny Tottenham a win. 
 
 Additionally Leicester city's manager Claudio Ranieri was earlier a manager at Chelsea and he had massive support from Chelsea supporters. 
 
