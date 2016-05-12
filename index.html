@@ -186,14 +186,14 @@
 
         */
         console.log("add_minutes:"+x_half_data.length);
-        d3.select(id).selectAll(".badge").remove();
-        var badges = d3.select(id).selectAll(".badge")
+        d3.select(id).selectAll("a.badge").remove();
+        var badges = d3.select(id).selectAll("a.badge")
             .data(x_half_data)
             .enter()
                 .append("a")
                 .attr("class", "badge")
                 .text(function(d){
-                    return d[d.length-1]
+                    return d[d.length-1]+"'";
                 })
                 .style("width", "40px");
         return badges;
@@ -207,7 +207,7 @@
                                     .getBoundingClientRect();
 
         svg_width = bounding_rect['width'] - margin.left - margin.right;
-        svg_height = 200;
+        svg_height = 150;
         svg = d3.select("#svg").append('svg')
                 .attr("width", svg_width + margin.left + margin.right)
                 .attr("height", svg_height + margin.top + margin.bottom)
@@ -319,8 +319,8 @@
     function set_match(wf, wl, match){
         data = wf;
         word_list = wl;
-        var word = word_list[4]['word'], 
-            index = word_list[4]['index'];
+        var word = word_list[0]['word'], 
+            index = word_list[0]['index'];
 
         var first_half_data = data[0];
         var second_half_data = data[1];
@@ -351,7 +351,7 @@
         console.log(ct_wl);
 
         add_svg();
-        set_match(ct_wf, ct_wl, 'ct');
+        set_match(ml_wf, ml_wl, 'ml');
 
     };
 
@@ -401,46 +401,38 @@
 <body>
     <div class="container">
         <div class="page-header">
-          <h1>Visualizing Tweets<small> (During the English Premier League)</small></h1>
+          <h1>Visualizing Tweets<small> (Leicester's winning bid in the English Premier League)</small></h1>
+          <h2><small>Occurrence of specific words (or phrases) within tweets during matches<small></h2>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col-sm-4" >
             <div class="page-header">
                 <h4>Choose match</h4>
             </div>
             <ul class="nav nav-pills nav-stacked">
-              <li role="presentation" class="match" id="ml_li" ><a href="#" id="ml_nav" onclick="set_match(manu_leicester_wf, manu_leicester_wl, 'ml')">Manchester vs Leicester</a></li>
-              <li role="presentation" class="match" id="ct_li" ><a href="#" id="ct_nav" onclick="set_match(chelsea_tottenham_wf, chelsea_tottenham_wl, 'ct')">Chelsea vs Tottenham</a></li>
+              <li role="presentation" class="match" id="ml_li" ><a id="ml_nav" onclick="set_match(manu_leicester_wf, manu_leicester_wl, 'ml')" style="font-size:19px">Manchester vs Leicester</a></li>
+              <li role="presentation" class="match" id="ct_li" ><a id="ct_nav" onclick="set_match(chelsea_tottenham_wf, chelsea_tottenham_wl, 'ct')" style="font-size:19px">Chelsea vs Tottenham</a></li>
             </ul>
             <div class="page-header">
               <h4>Choose words</h4>
             </div>
             <div class="btn-group btn-group-sm" role="group" id="choose_words" aria-label="choose words">
                 <!--
-              <button type="button" class="btn btn-default">Leicester</button>
-              <button type="button" class="btn btn-default">Middle</button>
-              <button type="button" class="btn btn-default">DrinkWater</button>
-              <button type="button" class="btn btn-default">Vardy</button>
-              <button type="button" class="btn btn-default">Mahrez/Mahrej</button>
-              <button type="button" class="btn btn-default">Goal</button>
-              <button type="button" class="btn btn-default">Penalty</button>
-              <button type="button" class="btn btn-default">Referee</button>
-              <button type="button" class="btn btn-default">Champions</button>
-              <button type="button" class="btn btn-default">Right</button>
-              <button type="button" class="btn btn-default">Right</button>
           -->
             </div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-8" style="border-left: 1px solid #ccc;">
             <div class="page-header legend-div">
-              <h4 id="match_heading"></h4> 
-              <span class="badge" style="width:12em">Legend (mentions)</span>
+              <h4 id="match_heading"><small></small></h4> 
+              <span class="badge" style="width:17em">Legend (# of occurences)</span>
             </div>
+            <div class="well well-sm" style="margin-top:10px;margin-bottom:10px;padding-top:5px;padding-bottom:5px"><span style="font-size:12px">First Half (Minutes)<span></div>
+
             <div id="first_half">
             </div>
 
-            <div class="page-header">
-              <h4></h4>
+            <div class="page-header well well-sm" style="margin-top:20px;margin-bottom:10px;padding-top:5px;padding-bottom:5px">
+                <span style="font-size:12px">Second Half (Minutes)<span>
             </div>
             <div id="second_half">
             </div>
