@@ -35,7 +35,6 @@
         padding-bottom: 5em;
         height: 1060px;
 
-        font: 1em sans-serif;
     }
 
     button {
@@ -216,6 +215,27 @@
         x.range([0, svg_width]);
         y.range([svg_height, 0]); 
 
+        // now rotate text on x axis
+        // solution based on idea here: https://groups.google.com/forum/?fromgroups#!topic/d3-js/heOBPQF3sAY
+        // first move the text left so no longer centered on the tick
+        // then rotate up to get 45 degrees.
+        svg.selectAll(".xaxis text")  // select all the text elements for the xaxis
+          .attr("transform", function(d) {
+             return "translate(" + this.getBBox().height*-2 + "," + this.getBBox().height + ")rotate(-45)";
+         });
+    
+        // now add titles to the axes
+        svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (-2) +","+(svg_height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Number of Minutes")
+            .style("font-size", "1.2em");
+
+        svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (svg_width/2) +","+(svg_height+(27))+")")  // centre below axis
+            .text("# of Occurences")
+            .style("font-size", "1.2em");
 
     }
 
