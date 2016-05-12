@@ -57,4 +57,17 @@ The detailed source code and instructions on how to setup your own pipeline to c
 ##### Number of tweets being collected per minute ?
 ![](EDA/num_tweets_per_minute.png )
 
+### References
 
+- Took inspiration from [Visualizing Shakespeare sonnetc](https://gramener.com/playground/shakespeare/network.html?sonnet=83)
+- Calendar view [Mike bostocks bl.ocks - Calendar](https://bl.ocks.org/mbostock/4063318)
+
+### TODO 
+
+Improvements
+- Right now we do exact searches for these words, it might be more representative to do some sort of fuzzy search (search for Goaaaaaal instead of Goal)
+
+Possible things to do 
+- Frequency for more than one word/phrases
+- Do sentiment analysis of tweets and show frequency of sentiment by minute
+- Network plot between tweets which contain more than one word/phrase alluding to relations between 
