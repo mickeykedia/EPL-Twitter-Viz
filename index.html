@@ -357,10 +357,10 @@
 
 
     queue()
-        .defer(d3.json, 'chelsea_tottenham_wf.json')               
-        .defer(d3.csv, 'chelsea_tottenham_word_list.csv') // REPLACE REF WITH DATA
-        .defer(d3.json, 'manu_leicester_wf.json')               
-        .defer(d3.csv, 'manu_leicester_word_list.csv') // REPLACE REF WITH DATA
+        .defer(d3.json, 'data/chelsea_tottenham_wf.json')               
+        .defer(d3.csv, 'data/chelsea_tottenham_word_list.csv') // REPLACE REF WITH DATA
+        .defer(d3.json, 'data/manu_leicester_wf.json')               
+        .defer(d3.csv, 'data/manu_leicester_word_list.csv') // REPLACE REF WITH DATA
         .await(create_chart);
 
     var all_data;
