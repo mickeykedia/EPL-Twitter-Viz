@@ -2,7 +2,7 @@
 
 This is a visualization representing twitter reactions over minutes of play during two important matches in the English Premier League which ended up deciding the champion for this year (Leicester City). 
 
-The github repo for the streaming pipeline is [here]((https://github.com/mickeykedia/EPL-Twitter) 
+The github repo for the streaming pipeline is [here](https://github.com/mickeykedia/EPL-Twitter) 
 
 These matches were Manchester United vs Leicester City (May 1, 2016) and Chelsea vs Tottenham Hotspurs (May 2, 2016).
 
