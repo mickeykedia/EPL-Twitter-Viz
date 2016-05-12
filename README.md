@@ -46,5 +46,5 @@ The detailed source code and instructions on how to setup your own pipeline to c
 
 #### EDA Plots 
 
-Plot 1 
-![What language do EPL supporters tweet in ?](eda_1.png "Language breakdown of the Tweets (sample)")
+What language do EPL supporters tweet in ?
+![](eda_1.png "Language breakdown of the Tweets (sample)")
