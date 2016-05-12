@@ -59,7 +59,9 @@ The detailed source code and instructions on how to setup your own pipeline to c
 
 ### References
 
-- Took inspiration from [Visualizing Shakespeare sonnetc](https://gramener.com/playground/shakespeare/network.html?sonnet=83)
+Took inspiration from 
+- [Visualizing Shakespeare sonnetc](https://gramener.com/playground/shakespeare/network.html?sonnet=83)
+- [Filler words in a speech](http://vallandingham.me/scroll_demo/)
 - Calendar view [Mike bostocks bl.ocks - Calendar](https://bl.ocks.org/mbostock/4063318)
 
 ### TODO 
