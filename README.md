@@ -43,3 +43,8 @@ The key idea for the visualization is the occurrence of words or phrases in twee
 I chose a color gradient for frequency because it allows the minutes in the match which are important to pop out and be immediately visible with least effort. I chose to represent the minutes in the match with numbers because that's how the game is tracked in soccer, where traditionally major events in the game are referenced by the minute on the clock. 
 
 The detailed source code and instructions on how to setup your own pipeline to collect tweets are at [my repo](https://github.com/mickeykedia/EPL-Twitter) here
+
+#### EDA Plots 
+
+Plot 1 
+![What language do EPL supporters tweet in ?](eda_1.png "Language breakdown of the Tweets (sample)")
