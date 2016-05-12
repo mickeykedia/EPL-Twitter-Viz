@@ -34,7 +34,9 @@
 
     body {
         padding-bottom: 5em;
-        height: 700px;
+        height: 1060px;
+
+        font: 1em sans-serif;
     }
 
     button {
@@ -55,6 +57,14 @@
       stroke: #000;
       shape-rendering: crispEdges;
     }
+
+    .match {
+        font-size: 1.5em;
+    }
+
+    .legend {
+        width:4em;
+    }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -66,7 +76,6 @@
     <script type="text/javascript">
 
     var colour = d3.scale.linear().range(["beige", "red"]);
-    var text_colour = d3.scale.linear().range(["red", "beige"]);
 
     // Variables that hold all the data we need
     var manu_leicester_wf, manu_leicester_wl, chelsea_tottenham_wf, chelsea_tottenham_wl;
@@ -105,9 +114,69 @@
         });
         min_freq = d3.min([d3.min(first_half_frequency), d3.min(second_half_frequency)]);
         max_freq = d3.max([d3.max(first_half_frequency), d3.max(second_half_frequency)]);
+        console.log(max_freq);
+        console.log(min_freq);
+
         colour.domain([min_freq, max_freq]);
-        text_colour.domain([min_freq, max_freq]);
     };
+
+    function color_text(value){
+        console.log(max_freq);
+        console.log(min_freq);
+        var middle_freq = (max_freq - min_freq)/2;
+        //console.log(middle_freq);
+        //console.log(value);
+        if (value > middle_freq){
+            return "#fff";
+        }else {
+            return '#000';
+        }
+    }
+
+    function add_legend(){
+        /**
+        called after colour domain is set
+        uses min_freq, max_freq and colour scale
+        */
+        var mf = max_freq + 1 - 1;
+        var arr = [],
+            c = max_freq - min_freq + 1;
+            while ( c-- ) {
+            arr[c] = mf--
+        };
+        var  legend_arr;
+        
+        if (arr.length < 5){
+            legend_arr = arr;
+        }else {
+            legend_arr = [];
+
+            for(i=0; i < 6; i++){
+                val = Math.round(d3.quantile(arr, i/5));
+
+                legend_arr.push(val);
+            }
+        }
+
+        d3.select(".legend-div").selectAll("a").remove();
+
+        d3.select(".legend-div").selectAll(".legend")
+            .data(legend_arr)
+            .enter()
+            .append("a")
+            .attr("class","legend badge")
+            .text(function(d){
+                return d.toLocaleString();
+            })
+            .style("background", function(d){
+                return colour(d);
+            })
+            .style("color", function(d){
+                return color_text(d);
+            });
+
+
+        }
 
     function add_minutes(id, x_half_data){
         /**
@@ -147,6 +216,7 @@
 
         x.range([0, svg_width]);
         y.range([svg_height, 0]); 
+
 
     }
 
@@ -223,6 +293,7 @@
         color_minutes(second_half_minutes, word, index);
 
         update_histogram(word, index);
+        add_legend();
 
     }
 
@@ -241,7 +312,7 @@
                 return d[index];
             })
             .style("color", function(d){
-                return text_colour(d[index]);
+                return color_text(d[index]);
             });
     };
 
@@ -255,6 +326,8 @@
         var second_half_data = data[1];
         add_words(word_list);
         d3.select("#match_heading").text(match_heading[match]);
+
+        console.log(match);
         first_half_minutes = add_minutes("#first_half", first_half_data);
         second_half_minutes = add_minutes("#second_half", second_half_data);
         on_word_click(word, index);
@@ -336,8 +409,8 @@
                 <h4>Choose match</h4>
             </div>
             <ul class="nav nav-pills nav-stacked">
-              <li role="presentation" class="match" ><a href="#" id="ml_nav" onclick="set_match(manu_leicester_wf, manu_leicester_wl, 'ml')">Manchester vs Leicester</a></li>
-              <li role="presentation" class="match" ><a href="#" id="ct_nav" onclick="set_match(chelsea_tottenham_wf, chelsea_tottenham_wl, 'ct')">Chelsea vs Tottenham</a></li>
+              <li role="presentation" class="match" id="ml_li" ><a href="#" id="ml_nav" onclick="set_match(manu_leicester_wf, manu_leicester_wl, 'ml')">Manchester vs Leicester</a></li>
+              <li role="presentation" class="match" id="ct_li" ><a href="#" id="ct_nav" onclick="set_match(chelsea_tottenham_wf, chelsea_tottenham_wl, 'ct')">Chelsea vs Tottenham</a></li>
             </ul>
             <div class="page-header">
               <h4>Choose words</h4>
@@ -359,8 +432,9 @@
             </div>
         </div>
         <div class="col-sm-8">
-            <div class="page-header">
-              <h4 id="match_heading"></h4>
+            <div class="page-header legend-div">
+              <h4 id="match_heading"></h4> 
+              <span class="badge" style="width:12em">Legend (mentions)</span>
             </div>
             <div id="first_half">
             </div>
@@ -369,6 +443,9 @@
               <h4></h4>
             </div>
             <div id="second_half">
+            </div>
+            <div class="page-header">
+              <h5>Histogram <small>(of the frequency of occurence of the phrase)</small></h5>
             </div>
             <div id="svg">
             </div>
